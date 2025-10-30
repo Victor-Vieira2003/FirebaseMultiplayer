@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "663108765907",
+    "firebase_url": "https://multiplayerfirebase-rt-default-rtdb.firebaseio.com",
+    "project_id": "multiplayerfirebase-rt",
+    "storage_bucket": "multiplayerfirebase-rt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663108765907:android:d09085ff3687e45f422c26",
+        "android_client_info": {
+          "package_name": "com.UnityTechnologies.com.unity.template.urpblank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhmImLJ6oIXH_9pRm8Oqs-pAUDQ6nAJf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
