@@ -41,7 +41,7 @@ public class DB_Manager : MonoBehaviour
     public async Task RetornoUsuario() //recupera o nome do usuario
     {
         var retorno = await reference.Child("usuarios").Child(id_usuario).Child("nome").GetValueAsync();
-         Debug.Log(retorno.ToString());
+         Debug.Log(retorno.Value.ToString());
     }
 }
 
