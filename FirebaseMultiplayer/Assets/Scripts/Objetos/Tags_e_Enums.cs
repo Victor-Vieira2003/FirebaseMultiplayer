@@ -32,4 +32,11 @@ namespace Objetos
         Cancelado,
         Manutencao
     }
+
+    public enum Estado
+    {
+        Online,
+        Offiline,
+        Undefined
+    }
 }
