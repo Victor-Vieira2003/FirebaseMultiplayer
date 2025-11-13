@@ -5,12 +5,9 @@ using Firebase.Database;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading.Tasks;
-
+    .
 public class DB_Manager : MonoBehaviour
 {
-    public TMP_InputField nome;
-    public TMP_InputField gold;
-    
     private string id_usuario;
 
     private DatabaseReference reference;
@@ -20,7 +17,8 @@ public class DB_Manager : MonoBehaviour
         reference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
+    /*
+     public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
     {
         Usuario usuario = new Usuario(this.nome.text, int.Parse(this.gold.text));
         string json = JsonUtility.ToJson(usuario);
@@ -32,6 +30,7 @@ public class DB_Manager : MonoBehaviour
     {
         await RetornoUsuario();
     }
+    */
     
     
     

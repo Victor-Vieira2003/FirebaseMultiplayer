@@ -2,23 +2,22 @@
 
 namespace Objetos
 {
-    public class Master:  MonoBehaviour
+    public class Submisso :  MonoBehaviour
     {
         public string id;
         public string id_sala;
         public string nome;
         public Estado estado;
-        public int comando;
+        public int? ultimo_comando;
         public float t_last_up;
 
-        public Master(string id,  string id_sala, string nome, Estado estado, int comando)
+        public Submisso(string id, string id_sala, string nome, Estado estado)
         {
             this.id = id;
             this.id_sala = id_sala;
             this.nome = nome;
             this.estado = estado;
-            this.comando = comando;
-            Debug.Log("Objeto Criado");
+            this.ultimo_comando = null;
         }
     }
 }
