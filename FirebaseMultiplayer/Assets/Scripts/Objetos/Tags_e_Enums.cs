@@ -39,4 +39,10 @@ namespace Objetos
         Offiline,
         Undefined
     }
+
+    public enum UserType
+    {
+        Master,
+        Submisso
+    }
 }
