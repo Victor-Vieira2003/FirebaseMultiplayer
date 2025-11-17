@@ -8,7 +8,7 @@ namespace Objetos
         public string nome;
         public Campus localizacao;
         public Status status;
-        public float t_last_up;
+        public float? t_last_up;
 
         public Sala(string id, string nome, Campus localizacao, Status status, float t_last_up)
         {

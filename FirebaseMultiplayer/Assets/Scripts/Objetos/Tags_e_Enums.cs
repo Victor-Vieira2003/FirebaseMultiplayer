@@ -45,4 +45,11 @@ namespace Objetos
         Master,
         Submisso
     }
+
+    public enum RoomType
+    {
+        Betha,
+        Arena,
+        LabMit
+    }
 }
