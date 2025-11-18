@@ -11,7 +11,12 @@ using Objetos;
 
 public class DB_Manager : MonoBehaviour
 {
+    [SerializeField]
+    private Parametrizador parametrizador;
+    
     private string id_usuario;
+
+    private bool returnVerifyUserInRoom = false;
     
     //IDs das salas, Referencia a raiz do banco, Rotas
     #region Variaveis Firebase
@@ -43,6 +48,7 @@ public class DB_Manager : MonoBehaviour
         private const string id_salaTeste = "TESTE_PP_01"; 
         
         
+        
         //referencia ao banco
         private DatabaseReference reference;
         
@@ -50,13 +56,13 @@ public class DB_Manager : MonoBehaviour
         private string rotaMaster;
         private string rotaSubmisso;
     #endregion
-    private void Start()
+    void Start()
     {
         id_usuario = SystemInfo.deviceUniqueIdentifier;//captura o id unico da maquina para usar como chave  no banco
         reference = FirebaseDatabase.DefaultInstance.RootReference;//cria uma referencia para a raiz do banco
 
         Debug.Log(id_usuario);
-        var x = VerifyUserInRoom(id_usuario, id_salaTeste);
+        VerifyUserInRoom(id_usuario, id_salaTeste);
     }
 
 
@@ -79,12 +85,14 @@ public class DB_Manager : MonoBehaviour
 
     private async void VerifyUserInRoom(string userId, string roomId)
     {
-        await VerifyUserInRoomTask(userId, roomId);
+        returnVerifyUserInRoom = await VerifyUserInRoomTask(userId, roomId);
     }
+    
+    
 
     #region Tasks
 
-        //Verifica se o o susario desejado existe na sala alvo
+        //Verifica se o usuario desejado existe na sala alvo
             private async Task<bool> VerifyUserInRoomTask(string userId, string roomId)
             {
                 string pathMaster = "Salas/" + roomId + "/master/" + userId;
@@ -120,33 +128,79 @@ public class DB_Manager : MonoBehaviour
                 }
             }
         
+            //retorna a snapshot de uma "FireBaseReference"
             private async Task<DataSnapshot> GetSnapshot(DatabaseReference reference)
             {
                 return await reference.GetValueAsync();
             }
 
     #endregion
-    
 
-    /*
-     public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
-    {
-        Usuario usuario = new Usuario(this.nome.text, int.Parse(this.gold.text));
-        string json = JsonUtility.ToJson(usuario);
+    #region Metodos Criadores
 
-        reference.Child("usuarios").Child(id_usuario).SetRawJsonValueAsync(json);
-    }
+        private async void NewFirebaseRoom(string id)//cria sala 
+        {
+            //verificando se a sala ja existe
+            var result = await GetSnapshot(reference.Child("Salas").Child(id));
+            if (result.Exists)
+            {
+                Debug.Log("o ID: " + id + " ja esta em uso");
+            }
+            else
+            {
+                //TRATANDO OS DADOS
+                string campus = parametrizador.localidade + parametrizador.campus;
+                Campus localizacao;
+                Campus.TryParse(campus, out localizacao);
+                
+                
+                string nameNewRoom = parametrizador.roomType.ToString() + parametrizador.localidade.ToString();
+                Sala room = new Sala(id, nameNewRoom, localizacao, Status.Ativo, 5f);
+                string json = JsonUtility.ToJson(room);
+                
+                //criando no banco
+                reference.Child("Salas").Child(id).SetRawJsonValueAsync(json);
+                
+                Debug.Log("Nova sala criada com o ID: " + id);
+            }
+        }
 
-    public async void GetUsuario()
-    {
-        await RetornoUsuario();
-    }
+        //Verifica e caso nao haja, cria um novo usuario disponivel
+        private async void NewFirebaseClient(string id_sala)
+        {
+            var resultado = await GetSnapshot(reference.Child("Clientes").Child(id_client));
+            if (resultado.Exists)
+            {
+                Debug.Log("o Cliente: " + id_client + " ja esta registrado");
+            }
+            else
+            {
+                var
+                Usuario client = new Usuario(id_usuario, id_sala, nome:victor, Estado.Undefined, );
+            }
+        }
 
-    public async Task RetornoUsuario() //recupera o nome do usuario
-    {
-        var retorno = await reference.Child("usuarios").Child(id_usuario).Child("nome").GetValueAsync();
-         Debug.Log(retorno.Value.ToString());
-    }
-    */
+        #endregion
+
+        /*
+         public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
+        {
+            Usuario usuario = new Usuario(this.nome.text, int.Parse(this.gold.text));
+            string json = JsonUtility.ToJson(usuario);
+
+            reference.Child("usuarios").Child(id_usuario).SetRawJsonValueAsync(json);
+        }
+
+        public async void GetUsuario()
+        {
+            await RetornoUsuario();
+        }
+
+        public async Task RetornoUsuario() //recupera o nome do usuario
+        {
+            var retorno = await reference.Child("usuarios").Child(id_usuario).Child("nome").GetValueAsync();
+             Debug.Log(retorno.Value.ToString());
+        }
+        */
 }
 

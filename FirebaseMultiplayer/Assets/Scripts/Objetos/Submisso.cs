@@ -2,22 +2,35 @@
 
 namespace Objetos
 {
-    public class Submisso :  MonoBehaviour
+    public class Submisso : Usuario
     {
-        public string id;
-        public string id_sala;
-        public string nome;
-        public Estado estado;
         public int? ultimo_comando;
-        public float t_last_up;
 
-        public Submisso(string id, string id_sala, string nome, Estado estado)
+        public Submisso(string id,  string id_sala, string nome, Estado estado, float t_last_up, int ultimo_comando)
         {
             this.id = id;
             this.id_sala = id_sala;
             this.nome = nome;
             this.estado = estado;
-            this.ultimo_comando = null;
+            this.t_last_up = t_last_up;
+            this.ultimo_comando = ultimo_comando;
+            Debug.Log("Objeto Criado");
+        }
+        
+        public Submisso(string id,  string id_sala, string nome, Estado estado, float t_last_up)
+        {
+            this.id = id;
+            this.id_sala = id_sala;
+            this.nome = nome;
+            this.estado = estado;
+            this.t_last_up = t_last_up;
+            this.ultimo_comando = 0;
+            Debug.Log("Objeto Criado");
+        }
+        public Submisso()
+        {
+            this.ultimo_comando = 0;
+            Debug.Log("Objeto Criado");
         }
     }
 }

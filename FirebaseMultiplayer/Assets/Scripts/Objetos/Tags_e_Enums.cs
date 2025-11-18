@@ -42,12 +42,14 @@ namespace Objetos
 
     public enum UserType
     {
+        Undefined,
         Master,
         Submisso
     }
 
     public enum RoomType
     {
+        Unknown,
         Betha,
         Arena,
         LabMit

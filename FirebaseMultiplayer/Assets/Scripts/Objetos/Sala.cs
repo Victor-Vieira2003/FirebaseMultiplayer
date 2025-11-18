@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Objetos
 {
-    public class Sala : MonoBehaviour
+    public class Sala
     {
         public string id;
         public string nome;
