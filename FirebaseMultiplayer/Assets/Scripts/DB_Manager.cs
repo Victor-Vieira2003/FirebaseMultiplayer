@@ -56,7 +56,7 @@ public class DB_Manager : MonoBehaviour
         reference = FirebaseDatabase.DefaultInstance.RootReference;//cria uma referencia para a raiz do banco
 
         Debug.Log(id_usuario);
-        VerifyUserInRoom(id_usuario, id_salaTeste);
+        var x = VerifyUserInRoom(id_usuario, id_salaTeste);
     }
 
 
@@ -77,46 +77,56 @@ public class DB_Manager : MonoBehaviour
         return null;
     }
 
-    //Verifica se o o susario desejado existe na sala alvo
-    private async Task<bool> VerifyUserInRoom(string userId, string roomId)
+    private async void VerifyUserInRoom(string userId, string roomId)
     {
-        string pathMaster = "Salas/" + roomId + "/master/" + userId;
-        string pathSubmisso = "Salas/" + roomId + "/submissos/" + userId;
-        var REFMaster = FirebaseDatabase.DefaultInstance.GetReference(pathMaster);
-        var REFSubmisso = FirebaseDatabase.DefaultInstance.GetReference(pathSubmisso);
-
-        bool verificacaoMaster = true;
-        bool verificacaoSubmisso  = true;
-
-        var result = await GetSnapshot(REFMaster);
-
-        if (!(result.Exists))
-        {
-            Debug.Log("Nao eh um master de " + roomId);
-            verificacaoMaster = false;
-        }
-        result = await GetSnapshot(REFSubmisso);
-        if (!(result.Exists))
-        {
-            Debug.Log("Nao eh um submisso de " + roomId);
-            verificacaoSubmisso = false;
-        }
-
-        if (!verificacaoMaster &&  !verificacaoSubmisso)
-        {
-            Debug.Log("Usuario nao existia" + roomId);
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        await VerifyUserInRoomTask(userId, roomId);
     }
 
-    private async Task<DataSnapshot> GetSnapshot(DatabaseReference reference)
-    {
-        return await reference.GetValueAsync();
-    }
+    #region Tasks
+
+        //Verifica se o o susario desejado existe na sala alvo
+            private async Task<bool> VerifyUserInRoomTask(string userId, string roomId)
+            {
+                string pathMaster = "Salas/" + roomId + "/master/" + userId;
+                string pathSubmisso = "Salas/" + roomId + "/submissos/" + userId;
+                var REFMaster = FirebaseDatabase.DefaultInstance.GetReference(pathMaster);
+                var REFSubmisso = FirebaseDatabase.DefaultInstance.GetReference(pathSubmisso);
+        
+                bool verificacaoMaster = true;
+                bool verificacaoSubmisso  = true;
+        
+                var result = await GetSnapshot(REFMaster);
+        
+                if (!(result.Exists))
+                {
+                    Debug.Log("Nao eh um master de " + roomId);
+                    verificacaoMaster = false;
+                }
+                result = await GetSnapshot(REFSubmisso);
+                if (!(result.Exists))
+                {
+                    Debug.Log("Nao eh um submisso de " + roomId);
+                    verificacaoSubmisso = false;
+                }
+        
+                if (!verificacaoMaster &&  !verificacaoSubmisso)
+                {
+                    Debug.Log("Usuario nao existia" + roomId);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        
+            private async Task<DataSnapshot> GetSnapshot(DatabaseReference reference)
+            {
+                return await reference.GetValueAsync();
+            }
+
+    #endregion
+    
 
     /*
      public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
