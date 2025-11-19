@@ -32,7 +32,9 @@ public class DB_Manager : MonoBehaviour
 
         #region IDs Arena
 
-            private const string id_arena =  "AN_PP_01";
+            private const string id_arenaPP =  "AN_PP_01";
+            private const string id_arenaGuaruja =  "AN_GUA_01";
+            private const string id_arenaJAU =  "AN_JAU_01";
 
         #endregion
 
@@ -40,6 +42,7 @@ public class DB_Manager : MonoBehaviour
 
             private const string id_labmit1 = "LM_PP_01";
             private const string id_labmit2 = "LM_PP_02";
+            private const string id_labmitC2 = "LM_PP_01_C2";
             private const string id_labmitJAU = "LM_JAU_01";
             private const string id_labmitGuaruja = "LM_GUA_01";
 
@@ -87,8 +90,74 @@ public class DB_Manager : MonoBehaviour
     {
         returnVerifyUserInRoom = await VerifyUserInRoomTask(userId, roomId);
     }
-    
-    
+
+    public void NewRegistro()
+    {
+        string campus = parametrizador.localidade + parametrizador.campus;
+        Campus localizacao;
+        Campus.TryParse(campus, out localizacao);
+        string nameNewRoom = parametrizador.roomType.ToString() + parametrizador.localidade.ToString();
+
+        if (localizacao == Campus.Guaruja)//Verificando Guaruja(Betha, Arena ou LabMit)
+        {
+            if (parametrizador.roomType == RoomType.Arena)
+            {
+                NewFirebaseRoom(id_arenaGuaruja, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.Betha)
+            {
+                NewFirebaseRoom(id_bethaGuaruja, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.LabMit)
+            {
+                NewFirebaseRoom(id_labmitGuaruja, localizacao, nameNewRoom);
+            }
+        }
+        else if (localizacao == Campus.Jau)//Verificando JAU(betha, arena, labmit)
+        {
+            if (parametrizador.roomType == RoomType.Arena)
+            {
+                NewFirebaseRoom(id_arenaJAU, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.Betha)
+            {
+                NewFirebaseRoom(id_bethaJAU, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.LabMit)
+            {
+                NewFirebaseRoom(id_labmitJAU, localizacao, nameNewRoom);
+            }
+        }
+        else if (localizacao == Campus.Presidente_Prudente_C1)//Verificando Presidente Prudente C1(betha, arena, labmit)
+        {
+            if (parametrizador.roomType == RoomType.Arena)
+            {
+                NewFirebaseRoom(id_arenaPP, localizacao, nameNewRoom); 
+            }
+            else if (parametrizador.roomType == RoomType.Betha)
+            {
+                NewFirebaseRoom(id_betha1, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.LabMit)
+            {
+                NewFirebaseRoom(id_labmit1, localizacao, nameNewRoom);
+            }
+            /*
+             * VERIFICAR O LABMIT 2
+             */
+        }
+        else if (localizacao == Campus.Presidente_Prudente_C2)//Verificando Presidente Prudente C2(betha, arena, labmit)
+        {
+            if (parametrizador.roomType == RoomType.Betha)
+            {
+                NewFirebaseRoom(id_betha2, localizacao, nameNewRoom);
+            }
+            else if (parametrizador.roomType == RoomType.LabMit)
+            {
+                NewFirebaseRoom(id_labmitC2, localizacao, nameNewRoom);
+            }
+        }
+    }
 
     #region Tasks
 
@@ -138,7 +207,7 @@ public class DB_Manager : MonoBehaviour
 
     #region Metodos Criadores
 
-        private async void NewFirebaseRoom(string id)//cria sala 
+        private async void NewFirebaseRoom(string id, Campus localizacao, string nameNewRoom)//cria sala 
         {
             //verificando se a sala ja existe
             var result = await GetSnapshot(reference.Child("Salas").Child(id));
@@ -148,13 +217,6 @@ public class DB_Manager : MonoBehaviour
             }
             else
             {
-                //TRATANDO OS DADOS
-                string campus = parametrizador.localidade + parametrizador.campus;
-                Campus localizacao;
-                Campus.TryParse(campus, out localizacao);
-                
-                
-                string nameNewRoom = parametrizador.roomType.ToString() + parametrizador.localidade.ToString();
                 Sala room = new Sala(id, nameNewRoom, localizacao, Status.Ativo, 5f);
                 string json = JsonUtility.ToJson(room);
                 
@@ -168,15 +230,20 @@ public class DB_Manager : MonoBehaviour
         //Verifica e caso nao haja, cria um novo usuario disponivel
         private async void NewFirebaseClient(string id_sala)
         {
-            var resultado = await GetSnapshot(reference.Child("Clientes").Child(id_client));
+            var resultado = await GetSnapshot(reference.Child("Clientes").Child(id_usuario));
             if (resultado.Exists)
             {
-                Debug.Log("o Cliente: " + id_client + " ja esta registrado");
+                Debug.Log("o Cliente: " + id_usuario + " ja esta registrado");
             }
             else
             {
-                var
-                Usuario client = new Usuario(id_usuario, id_sala, nome:victor, Estado.Undefined, );
+                var nome = await GetSnapshot(reference.Child("Clientes"));
+                
+                Usuario client = new Usuario(id_usuario, id_sala, nome.ChildrenCount.ToString(), Estado.Online, 5f);
+                string json = JsonUtility.ToJson(client);
+                
+                reference.Child("Clientes").Child(id_usuario).SetRawJsonValueAsync(json);
+                Debug.Log("Novo cliente " + id_usuario);
             }
         }
 
