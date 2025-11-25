@@ -18,6 +18,7 @@ namespace Objetos
 {
     public enum Campus
     {
+        undefined,
         Presidente_Prudente_C1,
         Presidente_Prudente_C2,
         Jau,

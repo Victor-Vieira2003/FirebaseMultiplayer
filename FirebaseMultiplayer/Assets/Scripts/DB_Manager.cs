@@ -98,6 +98,9 @@ public class DB_Manager : MonoBehaviour
         Campus.TryParse(campus, out localizacao);
         string nameNewRoom = parametrizador.roomType.ToString() + parametrizador.localidade.ToString();
 
+        Debug.Log("-----------------------------\n" + localizacao + "\n------------------------------");
+
+        
         if (localizacao == Campus.Guaruja)//Verificando Guaruja(Betha, Arena ou LabMit)
         {
             if (parametrizador.roomType == RoomType.Arena)
@@ -157,6 +160,8 @@ public class DB_Manager : MonoBehaviour
                 NewFirebaseRoom(id_labmitC2, localizacao, nameNewRoom);
             }
         }
+        
+        Debug.Log("-----------------------------\n" + localizacao + "\n------------------------------");
     }
 
     #region Tasks
