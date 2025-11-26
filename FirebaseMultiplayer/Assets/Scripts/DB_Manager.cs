@@ -93,75 +93,85 @@ public class DB_Manager : MonoBehaviour
 
     public void NewRegistro()
     {
+        string refIDsala;
         string campus = parametrizador.localidade + parametrizador.campus;
         Campus localizacao;
         Campus.TryParse(campus, out localizacao);
         string nameNewRoom = parametrizador.roomType.ToString() + parametrizador.localidade.ToString();
-
-        Debug.Log("-----------------------------\n" + localizacao + "\n------------------------------");
-
         
-        if (localizacao == Campus.Guaruja)//Verificando Guaruja(Betha, Arena ou LabMit)
-        {
-            if (parametrizador.roomType == RoomType.Arena)
-            {
-                NewFirebaseRoom(id_arenaGuaruja, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.Betha)
-            {
-                NewFirebaseRoom(id_bethaGuaruja, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.LabMit)
-            {
-                NewFirebaseRoom(id_labmitGuaruja, localizacao, nameNewRoom);
-            }
-        }
-        else if (localizacao == Campus.Jau)//Verificando JAU(betha, arena, labmit)
-        {
-            if (parametrizador.roomType == RoomType.Arena)
-            {
-                NewFirebaseRoom(id_arenaJAU, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.Betha)
-            {
-                NewFirebaseRoom(id_bethaJAU, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.LabMit)
-            {
-                NewFirebaseRoom(id_labmitJAU, localizacao, nameNewRoom);
-            }
-        }
-        else if (localizacao == Campus.Presidente_Prudente_C1)//Verificando Presidente Prudente C1(betha, arena, labmit)
-        {
-            if (parametrizador.roomType == RoomType.Arena)
-            {
-                NewFirebaseRoom(id_arenaPP, localizacao, nameNewRoom); 
-            }
-            else if (parametrizador.roomType == RoomType.Betha)
-            {
-                NewFirebaseRoom(id_betha1, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.LabMit)
-            {
-                NewFirebaseRoom(id_labmit1, localizacao, nameNewRoom);
-            }
-            /*
-             * VERIFICAR O LABMIT 2
-             */
-        }
-        else if (localizacao == Campus.Presidente_Prudente_C2)//Verificando Presidente Prudente C2(betha, arena, labmit)
-        {
-            if (parametrizador.roomType == RoomType.Betha)
-            {
-                NewFirebaseRoom(id_betha2, localizacao, nameNewRoom);
-            }
-            else if (parametrizador.roomType == RoomType.LabMit)
-            {
-                NewFirebaseRoom(id_labmitC2, localizacao, nameNewRoom);
-            }
-        }
-        
-        Debug.Log("-----------------------------\n" + localizacao + "\n------------------------------");
+        #region Registro Sala
+
+            if (localizacao == Campus.Guaruja)//Verificando Guaruja(Betha, Arena ou LabMit)
+                {
+                    if (parametrizador.roomType == RoomType.Arena)
+                    {
+                        NewFirebaseRoom(id_arenaGuaruja, localizacao, nameNewRoom);
+                        refIDsala = id_arenaGuaruja;
+                    }
+                    else if (parametrizador.roomType == RoomType.Betha)
+                    {
+                        NewFirebaseRoom(id_bethaGuaruja, localizacao, nameNewRoom);
+                        refIDsala = id_bethaGuaruja;
+                    }
+                    else if (parametrizador.roomType == RoomType.LabMit)
+                    {
+                        NewFirebaseRoom(id_labmitGuaruja, localizacao, nameNewRoom);
+                        refIDsala = id_labmitGuaruja;
+                    }
+                }
+            else if (localizacao == Campus.Jau)//Verificando JAU(betha, arena, labmit)
+                {
+                    if (parametrizador.roomType == RoomType.Arena)
+                    {
+                        NewFirebaseRoom(id_arenaJAU, localizacao, nameNewRoom);
+                    }
+                    else if (parametrizador.roomType == RoomType.Betha)
+                    {
+                        NewFirebaseRoom(id_bethaJAU, localizacao, nameNewRoom);
+                    }
+                    else if (parametrizador.roomType == RoomType.LabMit)
+                    {
+                        NewFirebaseRoom(id_labmitJAU, localizacao, nameNewRoom);
+                    }
+                }
+            else if (localizacao == Campus.Presidente_Prudente_C1)//Verificando Presidente Prudente C1(betha, arena, labmit)
+                {
+                    if (parametrizador.roomType == RoomType.Arena)
+                    {
+                        NewFirebaseRoom(id_arenaPP, localizacao, nameNewRoom); 
+                    }
+                    else if (parametrizador.roomType == RoomType.Betha)
+                    {
+                        NewFirebaseRoom(id_betha1, localizacao, nameNewRoom);
+                    }
+                    else if (parametrizador.roomType == RoomType.LabMit)
+                    {
+                        NewFirebaseRoom(id_labmit1, localizacao, nameNewRoom);
+                    }
+                    /*
+                     * VERIFICAR O LABMIT 2
+                     */
+                }
+            else if (localizacao == Campus.Presidente_Prudente_C2)//Verificando Presidente Prudente C2(betha, arena, labmit)
+                {
+                    if (parametrizador.roomType == RoomType.Betha)
+                    {
+                        NewFirebaseRoom(id_betha2, localizacao, nameNewRoom);
+                    }
+                    else if (parametrizador.roomType == RoomType.LabMit)
+                    {
+                        NewFirebaseRoom(id_labmitC2, localizacao, nameNewRoom);
+                    }
+                }
+
+
+        #endregion
+
+        #region Registro Usuario
+
+            
+
+        #endregion
     }
 
     #region Tasks
@@ -252,7 +262,7 @@ public class DB_Manager : MonoBehaviour
             }
         }
 
-        #endregion
+    #endregion
 
         /*
          public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
