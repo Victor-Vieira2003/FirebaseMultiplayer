@@ -13,6 +13,8 @@ public class DB_Manager : MonoBehaviour
 {
     [SerializeField]
     private Parametrizador parametrizador;
+    [SerializeField]
+    private UI_Manager ui_manager;
     
     private string id_usuario;
 
@@ -59,13 +61,26 @@ public class DB_Manager : MonoBehaviour
         private string rotaMaster;
         private string rotaSubmisso;
     #endregion
-    void Start()
+    async void Start()
     {
         id_usuario = SystemInfo.deviceUniqueIdentifier;//captura o id unico da maquina para usar como chave  no banco
         reference = FirebaseDatabase.DefaultInstance.RootReference;//cria uma referencia para a raiz do banco
-
+            .
         Debug.Log(id_usuario);
-        VerifyUserInRoom(id_usuario, id_salaTeste);
+        //VerifyUserInRoom(id_usuario, id_salaTeste);
+        
+        //verificando se maquina ja existe para poder realizar 
+        bool clienteExistente = await VerifyFirebaseClient(id_usuario);
+        if (clienteExistente)
+        {
+            ui_manager.telaCom_Registro.gameObject.SetActive(true);
+            ui_manager.telaSem_Registro.gameObject.SetActive(false);
+        }
+        else
+        {
+            ui_manager.telaCom_Registro.gameObject.SetActive(false);
+            ui_manager.telaSem_Registro.gameObject.SetActive(true);
+        }
     }
 
 
@@ -225,6 +240,18 @@ public class DB_Manager : MonoBehaviour
                 return await reference.GetValueAsync();
             }
 
+            //verifica se  a maquina ja é um cliente
+            private async Task<bool> VerifyFirebaseClient(string id_client)
+            {
+                var resultado =  await GetSnapshot(reference.Child("Clientes").Child(id_usuario));
+                if (resultado.Exists)
+                {
+                    Debug.Log("o Cliente: " + id_usuario + " ja esta registrado");
+                    return true;
+                }
+
+                return false;
+            }
     #endregion
 
     #region Metodos Criadores
@@ -271,6 +298,7 @@ public class DB_Manager : MonoBehaviour
                 }
             }
         }
+        
 
     #endregion
 
