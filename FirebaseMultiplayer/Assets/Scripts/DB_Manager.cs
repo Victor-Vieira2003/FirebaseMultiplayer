@@ -93,7 +93,7 @@ public class DB_Manager : MonoBehaviour
 
     public void NewRegistro()
     {
-        string refIDsala;
+        string refIDsala = null;
         string campus = parametrizador.localidade + parametrizador.campus;
         Campus localizacao;
         Campus.TryParse(campus, out localizacao);
@@ -124,29 +124,35 @@ public class DB_Manager : MonoBehaviour
                     if (parametrizador.roomType == RoomType.Arena)
                     {
                         NewFirebaseRoom(id_arenaJAU, localizacao, nameNewRoom);
+                        refIDsala = id_arenaJAU;
                     }
                     else if (parametrizador.roomType == RoomType.Betha)
                     {
                         NewFirebaseRoom(id_bethaJAU, localizacao, nameNewRoom);
+                        refIDsala = id_bethaJAU;
                     }
                     else if (parametrizador.roomType == RoomType.LabMit)
                     {
                         NewFirebaseRoom(id_labmitJAU, localizacao, nameNewRoom);
+                        refIDsala = id_labmitJAU;
                     }
                 }
             else if (localizacao == Campus.Presidente_Prudente_C1)//Verificando Presidente Prudente C1(betha, arena, labmit)
                 {
                     if (parametrizador.roomType == RoomType.Arena)
                     {
-                        NewFirebaseRoom(id_arenaPP, localizacao, nameNewRoom); 
+                        NewFirebaseRoom(id_arenaPP, localizacao, nameNewRoom);
+                        refIDsala = id_arenaPP;
                     }
                     else if (parametrizador.roomType == RoomType.Betha)
                     {
                         NewFirebaseRoom(id_betha1, localizacao, nameNewRoom);
+                        refIDsala = id_betha1;
                     }
                     else if (parametrizador.roomType == RoomType.LabMit)
                     {
                         NewFirebaseRoom(id_labmit1, localizacao, nameNewRoom);
+                        refIDsala = id_labmit1;
                     }
                     /*
                      * VERIFICAR O LABMIT 2
@@ -157,19 +163,20 @@ public class DB_Manager : MonoBehaviour
                     if (parametrizador.roomType == RoomType.Betha)
                     {
                         NewFirebaseRoom(id_betha2, localizacao, nameNewRoom);
+                        refIDsala = id_betha2;
                     }
                     else if (parametrizador.roomType == RoomType.LabMit)
                     {
                         NewFirebaseRoom(id_labmitC2, localizacao, nameNewRoom);
+                        refIDsala = id_labmitC2;
                     }
                 }
-
 
         #endregion
 
         #region Registro Usuario
 
-            
+            NewFirebaseClient(refIDsala);
 
         #endregion
     }
@@ -245,20 +252,23 @@ public class DB_Manager : MonoBehaviour
         //Verifica e caso nao haja, cria um novo usuario disponivel
         private async void NewFirebaseClient(string id_sala)
         {
-            var resultado = await GetSnapshot(reference.Child("Clientes").Child(id_usuario));
-            if (resultado.Exists)
+            if (id_sala != null)
             {
-                Debug.Log("o Cliente: " + id_usuario + " ja esta registrado");
-            }
-            else
-            {
-                var nome = await GetSnapshot(reference.Child("Clientes"));
+                var resultado = await GetSnapshot(reference.Child("Clientes").Child(id_usuario));
+                if (resultado.Exists)
+                {
+                    Debug.Log("o Cliente: " + id_usuario + " ja esta registrado");
+                }
+                else
+                {
+                    var nome = await GetSnapshot(reference.Child("Clientes"));
                 
-                Usuario client = new Usuario(id_usuario, id_sala, nome.ChildrenCount.ToString(), Estado.Online, 5f);
-                string json = JsonUtility.ToJson(client);
+                    Usuario client = new Usuario(id_usuario, id_sala, nome.ChildrenCount.ToString(), Estado.Online, 5f);
+                    string json = JsonUtility.ToJson(client);
                 
-                reference.Child("Clientes").Child(id_usuario).SetRawJsonValueAsync(json);
-                Debug.Log("Novo cliente " + id_usuario);
+                    reference.Child("Clientes").Child(id_usuario).SetRawJsonValueAsync(json);
+                    Debug.Log("Novo cliente " + id_usuario);
+                }
             }
         }
 
