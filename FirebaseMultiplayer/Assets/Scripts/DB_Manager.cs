@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using Firebase;
@@ -7,7 +8,9 @@ using TMPro;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using Firebase.Auth;
+using JetBrains.Annotations;
 using Objetos;
+using Unity.VisualScripting;
 
 public class DB_Manager : MonoBehaviour
 {
@@ -15,10 +18,14 @@ public class DB_Manager : MonoBehaviour
     private Parametrizador parametrizador;
     [SerializeField]
     private UI_Manager ui_manager;
+    [SerializeField]
+    private  SceneManager  sceneManager;
     
     private string id_usuario;
 
     private bool returnVerifyUserInRoom = false;
+    [CanBeNull] private Master master = null;
+    [CanBeNull]private Submisso submisso = null;
     
     //IDs das salas, Referencia a raiz do banco, Rotas
     #region Variaveis Firebase
@@ -63,9 +70,10 @@ public class DB_Manager : MonoBehaviour
     #endregion
     async void Start()
     {
+        await Task.Delay(10000);
         id_usuario = SystemInfo.deviceUniqueIdentifier;//captura o id unico da maquina para usar como chave  no banco
         reference = FirebaseDatabase.DefaultInstance.RootReference;//cria uma referencia para a raiz do banco
-            .
+            
         Debug.Log(id_usuario);
         //VerifyUserInRoom(id_usuario, id_salaTeste);
         
@@ -81,8 +89,12 @@ public class DB_Manager : MonoBehaviour
             ui_manager.telaCom_Registro.gameObject.SetActive(false);
             ui_manager.telaSem_Registro.gameObject.SetActive(true);
         }
+        
+        //sceneManager.RE_LoadScene();
+        //await Task.Delay(10000);
+        //sceneManager.RE_LoadScene();
+        Debug.Log("fim timer");
     }
-
 
     //Retorna a rota a ser utlizada com base no id da sala e no tipo de usuario
     private string GetFirebaseRoute(string id, UserType userType) 
@@ -194,6 +206,9 @@ public class DB_Manager : MonoBehaviour
             NewFirebaseClient(refIDsala);
 
         #endregion
+        
+        
+        sceneManager.RE_LoadScene();
     }
 
     #region Tasks
@@ -252,6 +267,12 @@ public class DB_Manager : MonoBehaviour
 
                 return false;
             }
+
+            #region Tasks de Apoio
+
+                
+
+            #endregion
     #endregion
 
     #region Metodos Criadores
@@ -298,11 +319,18 @@ public class DB_Manager : MonoBehaviour
                 }
             }
         }
+
+        public async void SetMaster()
+        {
+            string id = id_usuario;
+            string id_sala = (await GetSnapshot(reference.Child("Clientes").Child(id).Child("id_sala"))).Value.ToString();
+                .
+        }
         
-
     #endregion
+}
 
-        /*
+/*
          public void CriarUsuario()//metodo que adiciona uma tupla de um usuario ao banco
         {
             Usuario usuario = new Usuario(this.nome.text, int.Parse(this.gold.text));
@@ -322,5 +350,3 @@ public class DB_Manager : MonoBehaviour
              Debug.Log(retorno.Value.ToString());
         }
         */
-}
-
