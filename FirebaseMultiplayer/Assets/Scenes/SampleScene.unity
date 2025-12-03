@@ -8195,8 +8195,8 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 7874476390626364796}
         m_TargetAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
-        m_MethodName: set_sprite
-        m_Mode: 2
+        m_MethodName: 
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
@@ -9805,7 +9805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.33396217, g: 0.35460594, b: 0.5999999, a: 1}
+  m_Color: {r: 0.33396217, g: 0.35460594, b: 0.5999999, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

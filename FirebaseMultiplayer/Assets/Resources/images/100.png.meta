@@ -149,7 +149,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Captura de tela 2025-11-14 100414_0
+      name: 10
       rect:
         serializedVersion: 2
         x: 0
@@ -206,8 +206,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      10: -1174685805
       100: -2058772447
-      Captura de tela 2025-11-14 100414_0: -1174685805
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

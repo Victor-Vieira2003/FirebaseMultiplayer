@@ -120,9 +120,11 @@ public class DB_Manager : MonoBehaviour
                 submisso.ultimo_comando = int.Parse(id_aplicacao);
 
                 await ApplyFirebaseLastApplication(submisso.ultimo_comando.Value, submisso.id_sala);
-                ui_manager.SetSprite(submisso.ultimo_comando.Value.ToString());
+                
+                //SIMULANDO A TROCA DE APLICAÇÃO
+                //ui_manager.SetSprite(submisso.ultimo_comando.Value.ToString());
             }
-            
+            ui_manager.SetSprite(id_aplicacao.ToString());
         }
         else
         {
@@ -135,6 +137,15 @@ public class DB_Manager : MonoBehaviour
         {
             referenceMaster.ValueChanged -= RefreshAplication;
             Debug.Log("Listener de Realtime Database removido.");
+
+            if (master != null)
+            {
+                reference.Child("Salas").Child(master.id_sala).Child("master").RemoveValueAsync();
+            }
+            else if (submisso != null)
+            {
+                reference.Child("Salas").Child(submisso.id_sala).Child("submissos").Child(submisso.id).RemoveValueAsync();
+            }
         }
     }
     
