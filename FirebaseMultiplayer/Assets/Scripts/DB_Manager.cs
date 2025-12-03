@@ -324,7 +324,24 @@ public class DB_Manager : MonoBehaviour
         {
             string id = id_usuario;
             string id_sala = (await GetSnapshot(reference.Child("Clientes").Child(id).Child("id_sala"))).Value.ToString();
-                .
+            string nome = (await  GetSnapshot(reference.Child("Clientes").Child(id).Child("nome"))).Value.ToString();
+            Estado estado = (Estado) int.Parse((await GetSnapshot(reference.Child("Clientes").Child(id).Child("estado"))).Value.ToString());
+            float t_last_up = float.Parse((await GetSnapshot(reference.Child("Clientes").Child(id).Child("t_last_up"))).Value.ToString());
+            
+            master = new Master(id,  id_sala, nome, estado, t_last_up);
+            Debug.Log("Novo Master criado para " + id_sala);
+        }
+
+        public async void SetSubmisso()
+        {
+            string id = id_usuario;
+            string id_sala = (await GetSnapshot(reference.Child("Clientes").Child(id).Child("id_sala"))).Value.ToString();
+            string nome = (await GetSnapshot(reference.Child("Clientes").Child(id).Child("nome"))).Value.ToString();
+            Estado estado = (Estado) int.Parse((await GetSnapshot(reference.Child("Clientes").Child(id).Child("estado"))).Value.ToString());
+            float t_last_up = float.Parse((await GetSnapshot(reference.Child("Clientes").Child(id).Child("t_last_up"))).Value.ToString());
+
+            submisso = new Submisso(id, id_sala, nome, estado, t_last_up);
+            Debug.Log("Novo submisso criado para " + id_sala);
         }
         
     #endregion
