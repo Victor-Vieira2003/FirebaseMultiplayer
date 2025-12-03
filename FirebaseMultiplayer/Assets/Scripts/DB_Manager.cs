@@ -63,10 +63,8 @@ public class DB_Manager : MonoBehaviour
         
         //referencia ao banco
         private DatabaseReference reference;
+        private DatabaseReference referenceMaster;
         
-        //Rotas de Gravação e Consulta
-        private string rotaMaster;
-        private string rotaSubmisso;
     #endregion
     async void Start()
     {
@@ -83,6 +81,11 @@ public class DB_Manager : MonoBehaviour
         {
             ui_manager.telaCom_Registro.gameObject.SetActive(true);
             ui_manager.telaSem_Registro.gameObject.SetActive(false);
+
+            string sala = (await GetSnapshot(reference.Child("Clientes").Child(id_usuario).Child("id_sala"))).Value.ToString();
+            referenceMaster = FirebaseDatabase.DefaultInstance.GetReference(GetFirebaseRoute(sala, UserType.Master));
+
+            referenceMaster.ValueChanged += RefreshAplication;
         }
         else
         {
@@ -90,23 +93,62 @@ public class DB_Manager : MonoBehaviour
             ui_manager.telaSem_Registro.gameObject.SetActive(true);
         }
         
-        //sceneManager.RE_LoadScene();
-        //await Task.Delay(10000);
-        //sceneManager.RE_LoadScene();
-        Debug.Log("fim timer");
+        
     }
+    
+    //Metodo chamado toda vez que houver uma atualizacao no ultimo comando de uma sala
+    async void RefreshAplication(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError("Erro do Firebase: " + args.DatabaseError.Message);
+            return;
+        }
 
+        // Os dados mais recentes estão disponíveis em args.Snapshot
+        DataSnapshot snapshot = args.Snapshot;
+
+        if (snapshot.Exists)
+        {
+            
+            //leitura do ultimo comando dado
+            string id_aplicacao = snapshot.GetRawJsonValue();
+            Debug.Log(id_aplicacao);
+
+            if (submisso != null)//este pc entao eh um submisso
+            {
+                submisso.ultimo_comando = int.Parse(id_aplicacao);
+
+                await ApplyFirebaseLastApplication(submisso.ultimo_comando.Value, submisso.id_sala);
+                ui_manager.SetSprite(submisso.ultimo_comando.Value.ToString());
+            }
+            
+        }
+        else
+        {
+            Debug.Log("O nó não existe ou foi excluído.");
+        }
+    }
+    void OnDestroy()
+    {
+        if (referenceMaster != null)
+        {
+            referenceMaster.ValueChanged -= RefreshAplication;
+            Debug.Log("Listener de Realtime Database removido.");
+        }
+    }
+    
     //Retorna a rota a ser utlizada com base no id da sala e no tipo de usuario
     private string GetFirebaseRoute(string id, UserType userType) 
     {
         if (userType == UserType.Master)//Define a rota de Gravação e Consulta do Master
         {
-            rotaMaster = "Salas/" + id + "/master/ultimoComando";
+            string rotaMaster = "Salas/" + id + "/master/ultimoComando";
             return rotaMaster;
         }
         else if (userType == UserType.Submisso)//Define a rota de gravação e consulta dos submissos
         {
-            rotaSubmisso = "Salas/" + id + "/submissos/" + id_usuario + "ultimoComandoRecebido";
+            string rotaSubmisso = "Salas/" + id + "/submissos/" + id_usuario + "/ultimoComandoRecebido";
             return rotaSubmisso;
         }
 
@@ -211,6 +253,15 @@ public class DB_Manager : MonoBehaviour
         sceneManager.RE_LoadScene();
     }
 
+    public async void SetAplicacao(int id_aplicacao)
+    {
+        if (master != null)
+        {
+            await ApplyFirebaseApplication(id_aplicacao,  master.id_sala);
+        }
+    }
+    
+
     #region Tasks
 
         //Verifica se o usuario desejado existe na sala alvo
@@ -268,11 +319,19 @@ public class DB_Manager : MonoBehaviour
                 return false;
             }
 
-            #region Tasks de Apoio
+            private async Task ApplyFirebaseApplication(int id_aplicacao, string id_sala)
+            {
+                string[] rota = (GetFirebaseRoute(id_sala, UserType.Master)).ToString().Split("/");
 
-                
+                await reference.Child(rota[0]).Child(rota[1]).Child(rota[2]).Child(rota[3]).SetValueAsync(id_aplicacao);
+            }
 
-            #endregion
+            private async Task ApplyFirebaseLastApplication(int id_aplicacao, string id_sala)
+            {
+                //Debug.Log(GetFirebaseRoute(id_sala, UserType.Submisso));
+                string[] rota = (GetFirebaseRoute(id_sala, UserType.Submisso)).ToString().Split("/");
+                await reference.Child(rota[0]).Child(rota[1]).Child(rota[2]).Child(rota[3]).Child(rota[4]).SetValueAsync(id_aplicacao);
+            }
     #endregion
 
     #region Metodos Criadores
