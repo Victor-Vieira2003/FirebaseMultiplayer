@@ -12,11 +12,11 @@ public class BashCompiler : MonoBehaviour
     //definição dos comandos e qual ou quais os tipos de parametros o mesmo aceita
     private BashBasicComand[] Comandos = new BashBasicComand[]
     {
-        new BashBasicComand("open", new tipoDoParametro[] { tipoDoParametro.character }),
-        new BashBasicComand("off",  new tipoDoParametro[] { tipoDoParametro.undefined, tipoDoParametro.integer }),
-        new BashBasicComand("url", new tipoDoParametro[] { tipoDoParametro.character }),
-        new BashBasicComand("msg", new tipoDoParametro[] { tipoDoParametro.character }),
-        new BashBasicComand("kill", new tipoDoParametro[] { tipoDoParametro.character }),
+        new BashBasicComand("open", new tipoDoParametro[] { tipoDoParametro._char }),
+        new BashBasicComand("off",  new tipoDoParametro[] { tipoDoParametro.undefined, tipoDoParametro._int }),
+        new BashBasicComand("url", new tipoDoParametro[] { tipoDoParametro._char }),
+        new BashBasicComand("msg", new tipoDoParametro[] { tipoDoParametro._char }),
+        new BashBasicComand("kill", new tipoDoParametro[] { tipoDoParametro._char }),
         new BashBasicComand("lock", new tipoDoParametro[] { tipoDoParametro.undefined })
     };
 
@@ -37,7 +37,41 @@ public class BashCompiler : MonoBehaviour
                         string lastSimbols = characters[characters.Length - 2].ToString() + characters[characters.Length - 1].ToString();
                         if (lastSimbols == finalChars)
                         {//verificando o caracter final
-                            //CONTINUA DAQUI PORRA
+
+                            //Exatraindo e Concatenando o comando
+                            char[] comandCHAR = validateInitialSimbols[0].ToCharArray();
+                            string comand = "";
+                            for (int i = 1; i < comandCHAR.Length; i++)
+                            {
+                                comand += comandCHAR[i].ToString();
+                            }
+
+                            //verificando se o comando é valido
+                            foreach (var token in Comandos)
+                            {
+                                if (comand == token.comando)
+                                {
+                                    //Extraindo o parametro para verificação
+                                    char[] parametroCHAR = validateInitialSimbols[1].ToCharArray();
+                                    string parametro = "";
+
+                                    for (int i = 0; i < parametroCHAR.Length - 2; i++)
+                                    {
+                                        parametro += parametroCHAR[i].ToString();
+                                    }
+
+                                    //verificando qual o tipo do parametro
+                                    foreach (var tokenType in Comandos)
+                                    {
+                                        if (token.tipo ==  tokenType.tipo)
+                                        {
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                            return false;
+
                         }
                     }
                     return false;
@@ -49,14 +83,17 @@ public class BashCompiler : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log("Execeção encontrada: " + e.Message);
+            return false;
         }
+
+        
     }
     
 }
 public class BashBasicComand
 {
-    private string comando;
-    private tipoDoParametro[] tipo;
+    public string comando;
+    public tipoDoParametro[] tipo;
 
     public BashBasicComand(string comando, tipoDoParametro[] tipo)
     {
@@ -68,8 +105,8 @@ public class BashBasicComand
 public enum tipoDoParametro
 {
     undefined,
-    integer,
-    floating,
-    character,
-    boolean,
+    _int,
+    _float,
+    _char,
+    _bool,
 }
