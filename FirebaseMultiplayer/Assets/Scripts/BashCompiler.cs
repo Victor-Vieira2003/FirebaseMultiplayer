@@ -33,11 +33,11 @@ public class BashCompiler : MonoBehaviour
                 {//verificando o carracter inicial
                     foreach (var finalChars in IndicadoresDeTermino)
                     {
+                        //verificando o caracter final
                         var characters = validateInitialSimbols[1].ToCharArray();
                         string lastSimbols = characters[characters.Length - 2].ToString() + characters[characters.Length - 1].ToString();
                         if (lastSimbols == finalChars)
-                        {//verificando o caracter final
-
+                        {
                             //Exatraindo e Concatenando o comando
                             char[] comandCHAR = validateInitialSimbols[0].ToCharArray();
                             string comand = "";
@@ -65,6 +65,7 @@ public class BashCompiler : MonoBehaviour
                                     {
                                         if (token.tipo ==  tokenType.tipo)
                                         {
+                                            string tipo = token.tipo.ToString();
                                             
                                         }
                                     }
