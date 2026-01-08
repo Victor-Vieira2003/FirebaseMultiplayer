@@ -52,27 +52,11 @@ public class BashCompiler : MonoBehaviour
                                 if (comand == token.comando)
                                 {
                                     //Extraindo o parametro para verificação
-                                    char[] parametroCHAR = validateInitialSimbols[1].ToCharArray();
-                                    string parametro = "";
-
-                                    for (int i = 0; i < parametroCHAR.Length - 2; i++)
-                                    {
-                                        parametro += parametroCHAR[i].ToString();
-                                    }
-
-                                    //verificando qual o tipo do parametro
-                                    foreach (var tokenType in Comandos)
-                                    {
-                                        if (token.tipo ==  tokenType.tipo)
-                                        {
-                                            string tipo = token.tipo.ToString();
-                                            
-                                        }
-                                    }
+                                    string parametro = validateInitialSimbols[1].ToString().Trim('/').Trim('.');
+                                    //TRAVADO NESSA PARTE
                                 }
                             }
                             return false;
-
                         }
                     }
                     return false;
