@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class BashCompiler : MonoBehaviour
+public class BashCompiler
 {
     //definição dos indicadores iniciais
     private string[] IndicadoresDeInicio = new string[]{"@"};
@@ -53,7 +53,16 @@ public class BashCompiler : MonoBehaviour
                                 {
                                     //Extraindo o parametro para verificação
                                     string parametro = validateInitialSimbols[1].ToString().Trim('/').Trim('.');
-                                    //TRAVADO NESSA PARTE
+                                    if (parametro!= "")//caso o parametro nao seja vazio
+                                    {
+                                        //TRAVADO NESSA PARTE
+                                        /*
+                                         * VALIDAÇÃO DE TIPO
+                                         * NAO FUNCIONAL E TEMPORARIAMENTE
+                                         * IGNORADO
+                                         */
+                                    }
+                                    
                                 }
                             }
                             return false;
@@ -70,7 +79,7 @@ public class BashCompiler : MonoBehaviour
             Debug.Log("Execeção encontrada: " + e.Message);
             return false;
         }
-
+        
         
     }
     
