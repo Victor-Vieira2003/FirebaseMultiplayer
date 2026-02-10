@@ -1,6 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class BashCompiler
 {
@@ -104,17 +105,17 @@ public class BashCompiler
 
         private static void SendMessage(string[] args)
         {
-            /*string body = "@echo off" +
-                          "powershell -WindowStyle Hidden -Command Add- Type -AssemblyName" +
-                          "PresentationFramework; [System.Windows.MessageBox]::Show('MENSSAGEM'," +
-                          "'TITULO')";
-            string message = args[0];
+            string message = "";
+            foreach (var word in args)
+            {
+                message += (" " + word);
+            }
+            string body = "@echo off\npowershell -WindowStyle Hidden -Command \"(New-Object -ComObject WScript.Shell).Popup('MENSSAGEM', 0, 'Aviso do Administrador do Sistema', 64)\"\n";
             string message_popUP = body.Replace("MENSSAGEM", message);
             //message_popUP = message_popUP.Replace("TITULO", tittle);
-            executer.OverWrite(message_popUP);*/
-            
-            Debug.Log("enviando a mensagem" + args[0]);
-            
+            executer.OverWrite(message_popUP);
+            executer.ExecuteIt();
+            Debug.Log("concluido");
         }
 
     #endregion
@@ -151,6 +152,11 @@ public class BashCompiler
         public void OverWrite(string data)
         {
             File.WriteAllText(physicalExecuter, data);
+        }
+
+        public void ExecuteIt()
+        {
+            Process.Start(physicalExecuter);
         }
     }
 
