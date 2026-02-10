@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 
 public class BashCompiler
@@ -13,12 +14,17 @@ public class BashCompiler
     private BashBasicComand[] Comandos = new BashBasicComand[]
     {
         new BashBasicComand("open", new tipoDoParametro[] { tipoDoParametro._char }),
-        new BashBasicComand("off",  new tipoDoParametro[] { tipoDoParametro.undefined, tipoDoParametro._int }),
+        new BashBasicComand("off",  new tipoDoParametro[] { tipoDoParametro.undefined, tipoDoParametro._int }, metodo: ShutDown),
         new BashBasicComand("url", new tipoDoParametro[] { tipoDoParametro._char }),
-        new BashBasicComand("msg", new tipoDoParametro[] { tipoDoParametro._char }),
+        new BashBasicComand("msg", new tipoDoParametro[] { tipoDoParametro._char }, metodo: SendMessage),
         new BashBasicComand("kill", new tipoDoParametro[] { tipoDoParametro._char }),
         new BashBasicComand("lock", new tipoDoParametro[] { tipoDoParametro.undefined })
     };
+    
+    private static PhysicalExecuterCommand executer = new PhysicalExecuterCommand();
+    
+    //Variaveis de uso do compilador
+    //public static string message, tittle;
 
     public bool CompileThisInstruction(string comando)
     {
@@ -61,6 +67,12 @@ public class BashCompiler
                                          * NAO FUNCIONAL E TEMPORARIAMENTE
                                          * IGNORADO
                                          */
+                                        string[] args = parametro.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                        token.metodo(args);
+                                    }
+                                    else
+                                    {
+                                        
                                     }
                                     
                                 }
@@ -82,25 +94,73 @@ public class BashCompiler
         
         
     }
+
+    #region Metodos de Instrucao
+
+        private static void ShutDown(string[] args)
+        {
+            Debug.Log("desligando");
+        }
+
+        private static void SendMessage(string[] args)
+        {
+            /*string body = "@echo off" +
+                          "powershell -WindowStyle Hidden -Command Add- Type -AssemblyName" +
+                          "PresentationFramework; [System.Windows.MessageBox]::Show('MENSSAGEM'," +
+                          "'TITULO')";
+            string message = args[0];
+            string message_popUP = body.Replace("MENSSAGEM", message);
+            //message_popUP = message_popUP.Replace("TITULO", tittle);
+            executer.OverWrite(message_popUP);*/
+            
+            Debug.Log("enviando a mensagem" + args[0]);
+            
+        }
+
+    #endregion
+    
     
 }
-public class BashBasicComand
-{
-    public string comando;
-    public tipoDoParametro[] tipo;
 
-    public BashBasicComand(string comando, tipoDoParametro[] tipo)
+#region Classes e Definicoes
+
+    public class BashBasicComand
     {
-        this.comando = comando;
-        this.tipo = tipo;
-    }
-}
+        public string comando;
+        public tipoDoParametro[] tipo;
+        public Action<string[]> metodo;
 
-public enum tipoDoParametro
-{
-    undefined,
-    _int,
-    _float,
-    _char,
-    _bool,
-}
+        public BashBasicComand(string comando, tipoDoParametro[] tipo)
+        {
+            this.comando = comando;
+            this.tipo = tipo;
+        }
+
+        public BashBasicComand(string comando, tipoDoParametro[] tipo, Action<string[]> metodo)
+        {
+            this.comando = comando;
+            this.tipo = tipo;
+            this.metodo = metodo;
+        }
+    }
+
+    public class PhysicalExecuterCommand
+    {
+        private string physicalExecuter = Path.GetTempPath().ToString() + "\\BashCompilerFile.bat";
+
+        public void OverWrite(string data)
+        {
+            File.WriteAllText(physicalExecuter, data);
+        }
+    }
+
+    public enum tipoDoParametro
+    {
+        undefined,
+        _int,
+        _float,
+        _char,
+        _bool,
+    }
+
+#endregion
