@@ -16,10 +16,10 @@ public class BashCompiler
     {
         new BashBasicComand("open", new tipoDoParametro[] { tipoDoParametro._char }),
         new BashBasicComand("off",  new tipoDoParametro[] { tipoDoParametro.undefined, tipoDoParametro._int }, metodo: ShutDown),
-        new BashBasicComand("url", new tipoDoParametro[] { tipoDoParametro._char }),
+        new BashBasicComand("url", new tipoDoParametro[] { tipoDoParametro._char }, metodo:StartURL),
         new BashBasicComand("msg", new tipoDoParametro[] { tipoDoParametro._char }, metodo: SendMessage),
-        new BashBasicComand("kill", new tipoDoParametro[] { tipoDoParametro._char }),
-        new BashBasicComand("lock", new tipoDoParametro[] { tipoDoParametro.undefined })
+        new BashBasicComand("kill", new tipoDoParametro[] { tipoDoParametro._char }, metodo: KillProcess),
+        new BashBasicComand("lock", new tipoDoParametro[] { tipoDoParametro.undefined }, metodo: LockWorkstation)
     };
     
     private static PhysicalExecuterCommand executer = new PhysicalExecuterCommand();
@@ -71,10 +71,6 @@ public class BashCompiler
                                         string[] args = parametro.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                                         token.metodo(args);
                                     }
-                                    else
-                                    {
-                                        
-                                    }
                                     
                                 }
                             }
@@ -116,6 +112,47 @@ public class BashCompiler
             executer.OverWrite(message_popUP);
             executer.ExecuteIt();
             Debug.Log("concluido");
+        }
+
+        private static void StartApplication(string[] args)
+        {
+            string body = "";
+        }
+
+        private static void StartURL(string[] args)
+        {
+            string body = "@echo off\nstart URL";
+            string url = "";
+            foreach (var word in args)
+            {
+                url  += (" " + word);
+            }
+            //url
+            string batch = body.Replace("URL", url);
+            executer.OverWrite(batch);
+            executer.ExecuteIt();
+            
+        }
+
+        private static void KillProcess(string[] args)
+        {
+            string body = "taskkill /IM APLICATION.exe /F\n";
+            string app = "";
+            string batch = body.Replace("APPLICATION", app);
+            foreach (var word in args)
+            {
+                app += (" " + word);
+            }
+            executer.OverWrite(batch);
+            executer.ExecuteIt();
+        }
+
+        private static void LockWorkstation(string[] args)
+        {
+            string body = "@echo off\nrundll32 user32.dll,LockWorkStation";
+            executer.OverWrite(body);
+            executer.ExecuteIt();
+            Debug.Log("executou o comando lock");
         }
 
     #endregion
