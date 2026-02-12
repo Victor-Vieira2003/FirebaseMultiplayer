@@ -96,7 +96,15 @@ public class BashCompiler
 
         private static void ShutDown(string[] args)
         {
-            Debug.Log("desligando");
+            string body = "@echo off\nshutdown -s -f -t TIME";
+            string time = "";
+            foreach (var word in args)
+            {
+                time += (word);
+            }
+            string bathc = body.Replace("TIME", time);
+            executer.OverWrite(bathc);
+            executer.ExecuteIt();
         }
 
         private static void SendMessage(string[] args)
@@ -117,6 +125,12 @@ public class BashCompiler
         private static void StartApplication(string[] args)
         {
             string body = "";
+            var localAndApp = "";
+            foreach (var word in args)
+            {
+                localAndApp += (" " + word);
+            }
+            
         }
 
         private static void StartURL(string[] args)
