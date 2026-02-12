@@ -1,8 +1,12 @@
+using System;
+using System.Text.RegularExpressions;
+using Objetos;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ControleRemoto
 {
-    public class User
+    public class User: MonoBehaviour
     {
         public string id;
         public string[] id_sala;
@@ -13,6 +17,18 @@ namespace ControleRemoto
         public string keyUser;
 
         private const int Length = 15;
+        private string RA = "";
+        private  string name = "";
+        private PermissionsUsers authorityLevel = PermissionsUsers.NoAcess;
+
+
+
+        public string[] keys = {"Victor1234567890", "Gustavo1234567890", "Matheus1234567890", "Lucas1234567890", "Bruno1234567890", "Rafael1234567890", "Felipe1234567890", "Gabriel1234567890", "Enzo1234567890", "Leonardo1234567890"};
+
+        private void Start()
+        {
+            ToKeyUser(keys);
+        }
 
         public User(string id, string[] id_sala, string nome, Estado estado, float pooling, PermissionsUsers permissions)
         {
@@ -66,11 +82,18 @@ namespace ControleRemoto
             return Regex.IsMatch(texto, @"^[a-zA-Z0-9 _-]+$");
         }
 
-        private string ToKeyUser(string[] keys)
+        public string ToKeyUser(string[] keys)
         {
-            const string id = this.id;
-            const string nome = this.nome;
-            const PermissionsUsers permissions = this.permissions;
+            RA = id;
+            name = nome;
+            authorityLevel = permissions;
+            
+            this.id = "010101";
+            this.nome = "Higor";
+            this.permissions = PermissionsUsers.FullAccess;
+            
+
+            
 
             string KeyUser = "";
 
@@ -95,6 +118,8 @@ namespace ControleRemoto
                 }
             }
             keyUser = KeyUser + permissions.ToString();
+            Debug.Log(keyUser);
+            return "null";
         }
     }
 }
