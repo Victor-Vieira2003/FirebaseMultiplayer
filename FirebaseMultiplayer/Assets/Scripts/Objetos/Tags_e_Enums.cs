@@ -55,4 +55,11 @@ namespace Objetos
         Arena,
         LabMit
     }
+    public enum PermissionsUsers
+    {
+        FullAccess,
+        PartialAcess,
+        HalfPartialAcess,
+        NoAcess
+    }
 }
