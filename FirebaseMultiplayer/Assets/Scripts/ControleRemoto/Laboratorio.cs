@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using Objetos;
+using UnityEditor;
 
 namespace ControleRemoto
 {
@@ -22,8 +24,6 @@ namespace ControleRemoto
             this.id = id;
             this.descricao = descricao;
         }
-        
-        
         
     }
     
