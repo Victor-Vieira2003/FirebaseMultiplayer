@@ -650,6 +650,7 @@ GameObject:
   m_Component:
   - component: {fileID: 465280812}
   - component: {fileID: 465280811}
+  - component: {fileID: 465280813}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -669,24 +670,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b491605d49eb441b103683a41c4a46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 
+  id: 123456
   id_sala: []
-  nome: 
+  nome: gustavo
   estado: 2
   pooling: 0
-  permissions: 3
+  permissions: 0
   keyUser: 
-  keys:
-  - Victor1234567890
-  - Gustavo1234567890
-  - Matheus1234567890
-  - Lucas1234567890
-  - Bruno1234567890
-  - Rafael1234567890
-  - Felipe1234567890
-  - Gabriel1234567890
-  - Enzo1234567890
-  - Leonardo1234567890
+  RA: 
+  name: '        '
+  authorityLevel: 3
+  aleatorio:
+  - 65
+  - 66
+  - 67
+  - 68
+  - 69
+  - 70
+  - 71
+  - 72
+  - 73
+  - 74
+  - 75
+  - 76
+  - 77
+  - 78
+  - 79
+  - 80
+  - 81
+  - 82
+  - 83
+  - 84
+  - 85
+  - 86
+  - 87
+  - 88
+  - 89
+  - 90
+  - 97
+  - 98
+  - 99
+  - 100
+  - 101
+  - 102
+  - 103
+  - 104
+  - 105
+  - 106
+  - 107
+  - 108
+  - 109
+  - 110
+  - 111
+  - 112
+  - 113
+  - 114
+  - 115
+  - 116
+  - 117
+  - 118
+  - 119
+  - 120
+  - 121
+  - 122
+  - 48
+  - 49
+  - 50
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  r:
+    state: 0
 --- !u!4 &465280812
 Transform:
   m_ObjectHideFlags: 0
@@ -702,6 +760,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &465280813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465280810}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71727644b4134d8d9f0059a69d7483e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nome: LAbmit
+  ip: 123456
+  descricao: blabla
+  maquinas:
+  - nome: pc1
+    ip: 
+    ultimoComando: off
+    pooling: 20
+    status: 0
+  campus: 2
+  KeyMaquina: 1235
+  index: 0
 --- !u!1 &526604331
 GameObject:
   m_ObjectHideFlags: 0

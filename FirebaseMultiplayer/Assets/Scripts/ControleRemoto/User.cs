@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using Objetos;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace ControleRemoto
 {
-    public class User: MonoBehaviour
+    public class User   
     {
         public string id;
         public string[] id_sala;
@@ -18,7 +19,7 @@ namespace ControleRemoto
 
         private const int Length = 15;
         private string RA = "";
-        private  string name = "";
+        private  string name = "        ";
         private PermissionsUsers authorityLevel = PermissionsUsers.NoAcess;
         private char[] aleatorio = new[] {'A','B','C','D','E','F','G','H','I','J','K','L','M',
             'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
@@ -27,11 +28,20 @@ namespace ControleRemoto
             'n','o','p','q','r','s','t','u','v','w','x','y','z',
 
             '0','1','2','3','4','5','6','7','8','9'}; // caracteres aleatorios
-        private Unity.Mathematics.Random  r = new Unity.Mathematics.Random();
+
+        private Unity.Mathematics.Random r;
+
+        private void Awake()
+        {
+            r = new Unity.Mathematics.Random((uint) UnityEngine.Random.Range(1, int.MaxValue));
+        }
 
         private void Start()
         {
-            
+            string[] chaves = {"abcd", "efgh", "ijkl"};
+            keyUser = ToKeyUser(chaves);
+            Debug.Log(keyUser);
+            Debug.Log(ReverseKey(keyUser));
         }
 
         public User(string id, string[] id_sala, string nome, Estado estado, float pooling, PermissionsUsers permissions, string[] keyUsers)
@@ -56,9 +66,9 @@ namespace ControleRemoto
         }
         public User()
         {
-            this.id = null;
+            this.id = "";
             this.id_sala = null;
-            this.nome = null;
+            this.nome = "";
             this.estado = Estado.Undefined;
             this.pooling = 0;
             this.permissions = PermissionsUsers.NoAcess;
@@ -107,19 +117,15 @@ namespace ControleRemoto
             authorityLevel = permissions;
             
             string[] divideId = FormateId(id);
-            string tempKey = divideId[0] + nome + divideId[1];
+            string baseKey = divideId[0] + '-' + nome + '-' + divideId[1] + '-' + authorityLevel.ToString();
+            string tempKey =  baseKey;
+
+            while (CheckId(keys, tempKey))
+            {
+                tempKey = baseKey + "||" + Ramdon(4);
+            }
+            return tempKey;
             
-            bool check = CheckId(keys, tempKey);
-            if (!check)
-            {
-                return tempKey;
-            }
-            else
-            {
-                tempKey += "-" + Ramdon(4);
-                
-                return tempKey;
-            }
         }
 
         //divide a string pela metade e retorna um vetor com cada metade
@@ -130,7 +136,7 @@ namespace ControleRemoto
 
             string KeyUser = "";
 
-            string[] vt = new string[2];
+            string[] vt = { "", "" };
 
             for (index = 0; index < (vetId.Length / 2); index++)
             {
@@ -158,6 +164,57 @@ namespace ControleRemoto
 
             return rChars;
         }
-        
+
+        //retorna as informações usadas na chave (IP maquina, nome e nivel de permissão)
+        public static (string Id, String nome, PermissionsUsers permission)? ReverseKey(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return null;
+
+            string estrutura = key;
+
+            if (key.Contains("||"))
+            {
+                var keySplit = key.Split("||");
+                
+                if(keySplit.Length != 2)
+                    return null;
+                estrutura = keySplit[0];
+            }
+            
+            var parts = estrutura.Split("-");
+            
+            if (parts.Length < 4)
+                return null;
+            
+            string id1 = parts[0];
+            string id2 = parts[parts.Length - 2];
+            string permissaoStr =  parts[parts.Length - 1];
+            
+            if (!Enum.TryParse(permissaoStr, out PermissionsUsers permissao))
+                return null;
+            
+            if(!int.TryParse(id1, out _) || !int.TryParse(id2, out _))
+                return null;
+
+            string idCOmpleto = id1 + id2;
+            
+            
+            StringBuilder nameBUilder = new StringBuilder();
+
+            for (int i = 1; i < parts.Length - 2; i++)
+            {
+                nameBUilder.Append(parts[i]);
+                
+                if(i<parts.Length-3)
+                    nameBUilder.Append("-");
+            }
+            string nome = nameBUilder.ToString();
+            
+            if(string.IsNullOrWhiteSpace(nome))
+                return null;
+            
+            return (idCOmpleto, nome, permissao);
+        }
     }
 }

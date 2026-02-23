@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace ControleRemoto
 {
+    [System.Serializable]
     public class Maquina
     {
         public string nome;
@@ -12,6 +13,7 @@ namespace ControleRemoto
         [CanBeNull] public string ultimoComando = null;
         public float pooling;
         public Estado status;
+
 
         public Maquina(string nome, string ip, float pooling)
         {
